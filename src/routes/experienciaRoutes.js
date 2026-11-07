@@ -49,9 +49,42 @@ router.get('/:id', experienciaController.buscarExperiencia);
  *   post:
  *     summary: Cadastra uma experiência
  *     tags: [Experiências]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - pessoa_id
+ *             properties:
+ *               pessoa_id:
+ *                 type: integer
+ *                 example: 2
+ *               empresa:
+ *                 type: string
+ *                 example: Empresa de Tecnologia
+ *               cargo:
+ *                 type: string
+ *                 example: Desenvolvedor Backend
+ *               descricao:
+ *                 type: string
+ *                 example: Desenvolvimento de APIs REST
+ *               data_inicio:
+ *                 type: string
+ *                 format: date
+ *                 example: 2024-01-10
+ *               data_fim:
+ *                 type: string
+ *                 format: date
+ *                 example: 2025-06-10
  *     responses:
  *       201:
  *         description: Experiência cadastrada com sucesso
+ *       400:
+ *         description: Dados inválidos
+ *       500:
+ *         description: Erro interno
  */
 router.post('/', experienciaController.criarExperiencia);
 
@@ -67,9 +100,40 @@ router.post('/', experienciaController.criarExperiencia);
  *         required: true
  *         schema:
  *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               pessoa_id:
+ *                 type: integer
+ *                 example: 2
+ *               empresa:
+ *                 type: string
+ *                 example: Empresa de Tecnologia
+ *               cargo:
+ *                 type: string
+ *                 example: Desenvolvedor Backend
+ *               descricao:
+ *                 type: string
+ *                 example: Desenvolvimento de APIs REST
+ *               data_inicio:
+ *                 type: string
+ *                 format: date
+ *                 example: 2024-01-10
+ *               data_fim:
+ *                 type: string
+ *                 format: date
+ *                 example: 2025-06-10
  *     responses:
  *       200:
  *         description: Experiência atualizada
+ *       404:
+ *         description: Experiência não encontrada
+ *       500:
+ *         description: Erro interno
  */
 router.put('/:id', experienciaController.atualizarExperiencia);
 
@@ -88,6 +152,8 @@ router.put('/:id', experienciaController.atualizarExperiencia);
  *     responses:
  *       200:
  *         description: Experiência excluída com sucesso
+ *       404:
+ *         description: Experiência não encontrada
  */
 router.delete('/:id', experienciaController.excluirExperiencia);
 

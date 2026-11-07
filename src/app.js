@@ -1,21 +1,41 @@
 
-const swaggerUi = require('swagger-ui-express');
-const swaggerSpec = require('./config/swagger');
 const express = require('express');
 const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
 
 const app = express();
 
-const pessoaRoutes = require('./routes/pessoaRoutes');
-const formacaoRoutes = require('./routes/formacaoRoutes');
-const experienciaRoutes = require('./routes/experienciaRoutes');
-const projetoRoutes = require('./routes/projetoRoutes');
-const habilidadeRoutes = require('./routes/habilidadeRoutes');
-
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// Documentação JSON
+app.get('/api-docs.json', (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).json(swaggerSpec);
+});
+
+// Interface Swagger
+app.use(
+    '/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpec, {
+        explorer: true,
+        swaggerOptions: {
+            docExpansion: 'list',
+            defaultModelsExpandDepth: 3,
+            defaultModelExpandDepth: 3,
+            supportedSubmitMethods: [
+                'get',
+                'post',
+                'put',
+                'delete',
+                'patch'
+            ]
+        }
+    })
+);
 
 app.get('/', (req, res) => {
     res.json({
@@ -24,10 +44,11 @@ app.get('/', (req, res) => {
     });
 });
 
-app.use('/pessoas', pessoaRoutes);
-app.use('/formacoes', formacaoRoutes);
-app.use('/experiencias', experienciaRoutes);
-app.use('/projetos', projetoRoutes);
-app.use('/habilidades', habilidadeRoutes);
+// Rotas
+app.use('/pessoas', require('./routes/pessoaRoutes'));
+app.use('/formacoes', require('./routes/formacaoRoutes'));
+app.use('/experiencias', require('./routes/experienciaRoutes'));
+app.use('/projetos', require('./routes/projetoRoutes'));
+app.use('/habilidades', require('./routes/habilidadeRoutes'));
 
 module.exports = app;
